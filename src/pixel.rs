@@ -73,4 +73,11 @@ impl<'a> PixelWindow<'a> {
             .try_into()
             .expect("Buffer is big enough")
     }
+
+    /// Clear the whole window to the given color
+    pub fn clear(&mut self, color: ColorRGBA) {
+        for chunk in self.raw_buffer.chunks_exact_mut(4) {
+            chunk.copy_from_slice(&color);
+        }
+    }
 }
