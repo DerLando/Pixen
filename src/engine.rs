@@ -45,7 +45,7 @@ pub fn run_stateless<D: Fn(&mut PixelWindow) + 'static>(width: u32, height: u32,
         let window = {
             let size = LogicalSize::new(width as f64, height as f64);
             WindowBuilder::new()
-                .with_title("Hello Pixels")
+                .with_title("Pixen")
                 .with_inner_size(size)
                 .with_min_inner_size(size)
                 .build(&event_loop)

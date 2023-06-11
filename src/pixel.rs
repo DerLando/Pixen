@@ -22,7 +22,7 @@ impl<'a> PixelWindow<'a> {
 
     #[inline]
     fn write_to_buffer(&mut self, start: usize, bytes: &[u8]) {
-        self.raw_buffer[start..=start + bytes.len()].copy_from_slice(bytes);
+        self.raw_buffer[start..start + bytes.len()].copy_from_slice(bytes);
     }
 
     pub fn set_pixel(&mut self, x: u32, y: u32, color: Color) {
