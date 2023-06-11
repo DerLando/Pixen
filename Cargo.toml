@@ -1,0 +1,15 @@
+[package]
+name = "pixen"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+env_logger = "0.10.0"
+error-iter = "0.4.1"
+log = "0.4.18"
+obj-rs = "0.7.1"
+pixels = "0.12.1"
+winit = "0.28.6"
+winit_input_helper = "0.14.1"
