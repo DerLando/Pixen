@@ -1,6 +1,6 @@
 use crate::Color;
 
-struct PixelWindow<'a> {
+pub struct PixelWindow<'a> {
     width: u32,
     height: u32,
     raw_buffer: &'a mut [u8],
