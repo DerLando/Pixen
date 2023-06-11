@@ -38,6 +38,8 @@ pub(crate) struct StatefullEngine<S> {
     marker: PhantomData<S>,
 }
 
+/// Run a stateless pixel engine. This engine only needs width, height and
+/// a draw function that will be called everytime the window refreshes.
 pub fn run_stateless<D: Fn(&mut PixelWindow) + 'static>(width: u32, height: u32, draw_fn: D) -> Result<(), Error> {
         env_logger::init();
         let event_loop = EventLoop::new();
