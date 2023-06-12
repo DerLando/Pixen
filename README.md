@@ -2,6 +2,8 @@
 
 A minimal **Pix**el **En**gine
 
+![Screenshot of the minimal example](examples/minimal_screenshot.png)
+
 ## Motivation and Design
 
 Oftentimes I find myself looking at intereseting graphics related programming content for low-level-ish languages like *C* or *C++* and want to do them in a language I am more comfortable with, so *rust*. I could not find a *truly minimal* pixel engine, which allows me push pixels to a window with only a few lines of code, so I created my own on top of the [Pixels](https://crates.io/crates/pixels) crate.
