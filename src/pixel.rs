@@ -80,4 +80,19 @@ impl<'a> PixelWindow<'a> {
             chunk.copy_from_slice(&color);
         }
     }
+
+    /// Consume the [`PixelWindow`] and give back mut access to it's
+    /// inner, raw pixel bytes buffer
+    pub fn into_inner(self) -> &'a mut [u8] {
+        self.raw_buffer
+    }
+}
+
+#[cfg(feature = "image")]
+impl<'a> PixelWindow<'a> {
+    pub fn capture_to_image(&self) -> image::ImageBuffer<image::Rgba<u8>, Vec<u8>> {
+        image::ImageBuffer::from_fn(self.width, self.height, |x, y| {
+            image::Rgba(self.get_pixel(x, y))
+        })
+    }
 }

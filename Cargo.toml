@@ -1,15 +1,27 @@
 [package]
 name = "pixen"
-version = "0.1.0"
+version = "0.0.1"
 edition = "2021"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+license = "MIT OR Apache-2.0"
+description = "A simple pixel engine, allowing to draw pixels with minimal setup"
+authors = ["Lando Schumpich <lando.schumpich@gmail.com>"]
+readme = "README.md"
+repository = "https://github.com/DerLando/Pixen"
+keywords = ["gamedev", "graphics", "pixel", "engine", "batteries-included"]
+categories = ["game-development", "game-engines", "games", "graphics"]
 
 [dependencies]
-env_logger = "0.10.0"
-error-iter = "0.4.1"
-log = "0.4.18"
-obj-rs = "0.7.1"
 pixels = "0.12.1"
-winit = "0.28.6"
-winit_input_helper = "0.14.1"
+env_logger = {version = "0.10.0", optional = true}
+error-iter = {version = "0.4.1", optional = true}
+log = {version = "0.4.18", optional = true}
+winit = {version = "0.28.6", optional = true}
+winit_input_helper = {version = "0.14.1", optional = true}
+image = {version = "0.24.6", optional = true}
+
+[features]
+default = ["window"]
+window = ["logging", "winit"]
+logging = ["dep:env_logger", "dep:error-iter", "dep:log"]
+winit = ["dep:winit", "dep:winit_input_helper"]
+image = ["dep:image"]
