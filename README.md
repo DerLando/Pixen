@@ -35,3 +35,6 @@ I will probably only work on this from time to time, when a feature feels missin
 - [ ] Feature gated primitive drawing functions. By default only the `set_pixel` function should be available, so users can build their own drawing algorithms how they like. But it would also be nice to offer a few common drawing routines behind a feature flag, like f.e. *line*, *circle*, *rectangle*, etc.
 - [ ] Publish to [crates.io](https://crates.io). The name is still free and I should do it once I'm comfortable with the initial public API.
 - [ ] Built-in support for multiple color spaces, instead of everything assuming rgba under the hood. Might also include some default colors as well as color conversions and tweens through something like the palette crate
+- [ ] Gif export behind a feature flag.
+- [ ] Noise functions as a core feature
+- [ ] Some additional math functions not present in *std* which are nice to have for rapid prototyping. Especially lerping and tweening functions would be great for animations
