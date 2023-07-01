@@ -25,13 +25,13 @@ run_stateless(200, 200, |window| {
 
 ## Roadmap
 
-I will probably only work on this from time to time, when a feature feels missing for a tutorial I'm working on. A few fetures that would be nice to have already come to mind though, so here is an unordered roadmap
+I will probably only work on this from time to time, when a feature feels missing for a tutorial I'm working on. A few features that would be nice to have already come to mind though, so here is an unordered roadmap
 
-- [ ] Different windowing libraries insteaf of just using winit as the default. Probably it would make sense to have those behind a feature flag and having the default implementation just take and write to a pixel buffer.
+- [ ] Different windowing libraries instead of just using winit as the default. Probably it would make sense to have those behind a feature flag and having the default implementation just take and write to a pixel buffer.
 - [ ] Support for input handling. Right now only the escape key is tracked to close the window
 - [ ] Builder API that allows to initialize an engine in multiple steps, which in turn will make the app code relying on this library more readable
 - [ ] Implementing scripting languages behind feature flags. This would allow hot-reloading of the pixel content generating code.
 - [ ] Compile to WASM, as a feature, which would allow using the engine on the web in an easy way. For this an example would be great, too.
 - [ ] Feature gated primitive drawing functions. By default only the `set_pixel` function should be available, so users can build their own drawing algorithms how they like. But it would also be nice to offer a few common drawing routines behind a feature flag, like f.e. *line*, *circle*, *rectangle*, etc.
 - [ ] Publish to [crates.io](https://crates.io). The name is still free and I should do it once I'm comfortable with the initial public API.
-- [ ] Built-in support for multiple color spaces, instead of everything assuming rgba under the hood.
+- [ ] Built-in support for multiple color spaces, instead of everything assuming rgba under the hood. Might also include some default colors as well as color conversions and tweens through something like the palette crate

@@ -10,6 +10,8 @@ pub struct PixelWindow<'a> {
 }
 
 impl<'a> PixelWindow<'a> {
+    /// Create a new [`PixelWindow`] which wraps the given buffer. Buffers are stored
+    /// as mutable references, so ownership of the buffer can reside with the caller.
     pub(crate) fn new(width: u32, height: u32, raw_buffer: &'a mut [u8]) -> Self {
         Self {
             width,
@@ -90,6 +92,12 @@ impl<'a> PixelWindow<'a> {
 
 #[cfg(feature = "image")]
 impl<'a> PixelWindow<'a> {
+    /// Capture the current state of the [`PixelWindow`] to a an [`image::ImageBuffer`].
+    /// This buffer can be saved to a file safely.
+    ///
+    /// # Performance
+    ///
+    /// This effectively copies the inner buffer fully, so it is quite costly.
     pub fn capture_to_image(&self) -> image::ImageBuffer<image::Rgba<u8>, Vec<u8>> {
         image::ImageBuffer::from_fn(self.width, self.height, |x, y| {
             image::Rgba(self.get_pixel(x, y))
