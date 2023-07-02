@@ -58,6 +58,7 @@ pub fn run_stateless<D: Fn(&mut PixelWindow) + 'static>(
                 let window = PixelWindow::new(width, height, pixels.frame_mut());
                 let screenshot = window.capture_to_image();
                 screenshot.save("screenshot.png");
+                println!("Saved screenshot");
             }
 
             // Resize the window
@@ -129,6 +130,14 @@ where
             if input.key_pressed(VirtualKeyCode::Escape) || input.quit() {
                 *control_flow = ControlFlow::Exit;
                 return;
+            }
+
+            #[cfg(feature = "image")]
+            if input.key_pressed(VirtualKeyCode::S) {
+                let window = PixelWindow::new(width, height, pixels.frame_mut());
+                let screenshot = window.capture_to_image();
+                screenshot.save("screenshot.png");
+                println!("Saved screenshot");
             }
 
             // Resize the window

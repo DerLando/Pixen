@@ -73,14 +73,10 @@ impl<'a> PixelWindow<'a> {
     /// This function **will panic** if either the x or y inputs are outside the [`PixelWindow`]s bounds.
     pub fn get_pixel_unchecked(&self, x: u32, y: u32) -> &ColorRGBA {
         let index = self.xy_to_index(x, y);
-        println!("index: {:?}, buf_len: {:?}", index, self.raw_buffer.len());
-        println!("index range: {:?}", index..=index + 4);
 
-        match self.raw_buffer[index..=index + 3].try_into() {
+        match self.raw_buffer[index..index + 4].try_into() {
             Ok(p) => p,
             Err(e) => {
-                println!("{:?}", e);
-                println!("{:?}", e.source());
                 panic!();
             }
         }
