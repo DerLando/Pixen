@@ -12,7 +12,7 @@ fn draw(window: &mut PixelWindow, angle: &f32) {
     // Clear the whole window to black
     window.clear([0, 0, 0, 0]);
     // Draw a point in polar coordinates
-    window.set_pixel(x as u32, y as u32, [255, 255, 255, 255]);
+    window.set_pixel(x as u32, y as u32, pixen::WHITE);
 }
 
 fn main() {

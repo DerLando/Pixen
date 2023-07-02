@@ -11,7 +11,7 @@ fn main() {
                     continue;
                 }
 
-                window.set_pixel(x, y, [255, 255, 255, 255]);
+                window.set_pixel(x, y, pixen::WHITE);
             }
         }
     })

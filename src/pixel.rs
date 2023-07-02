@@ -1,4 +1,5 @@
 use crate::ColorRGBA;
+use std::error::Error;
 
 /// A safe wrapper around a continuous slice of raw pixel bytes.
 /// The inner color values of the pixels can be accessed by giving
@@ -10,7 +11,10 @@ pub struct PixelWindow<'a> {
 }
 
 impl<'a> PixelWindow<'a> {
+    /// Create a new [`PixelWindow`] which wraps the given buffer. Buffers are stored
+    /// as mutable references, so ownership of the buffer can reside with the caller.
     pub(crate) fn new(width: u32, height: u32, raw_buffer: &'a mut [u8]) -> Self {
+        assert!(raw_buffer.len() == (width * height * 4) as usize);
         Self {
             width,
             height,
@@ -58,7 +62,7 @@ impl<'a> PixelWindow<'a> {
     /// Get the pixel color at the given x and y location.
     /// This function is save in regards to window bounds and will clamp the x and y inputs.
     /// If you know the location is in bounds, consider using [`PixelWindow::get_pixel_unchecked()`] instead.
-    pub fn get_pixel(&self, x: u32, y: u32) -> ColorRGBA {
+    pub fn get_pixel(&self, x: u32, y: u32) -> &ColorRGBA {
         let x = x % self.width;
         let y = y % self.height;
 
@@ -67,11 +71,15 @@ impl<'a> PixelWindow<'a> {
 
     /// Get the pixel color at the given x and y location.
     /// This function **will panic** if either the x or y inputs are outside the [`PixelWindow`]s bounds.
-    pub fn get_pixel_unchecked(&self, x: u32, y: u32) -> ColorRGBA {
+    pub fn get_pixel_unchecked(&self, x: u32, y: u32) -> &ColorRGBA {
         let index = self.xy_to_index(x, y);
-        self.raw_buffer[index..=index + 4]
-            .try_into()
-            .expect("Buffer is big enough")
+
+        match self.raw_buffer[index..index + 4].try_into() {
+            Ok(p) => p,
+            Err(e) => {
+                panic!();
+            }
+        }
     }
 
     /// Clear the whole window to the given color
@@ -90,9 +98,15 @@ impl<'a> PixelWindow<'a> {
 
 #[cfg(feature = "image")]
 impl<'a> PixelWindow<'a> {
+    /// Capture the current state of the [`PixelWindow`] to a an [`image::ImageBuffer`].
+    /// This buffer can be saved to a file safely.
+    ///
+    /// # Performance
+    ///
+    /// This effectively copies the inner buffer fully, so it is quite costly.
     pub fn capture_to_image(&self) -> image::ImageBuffer<image::Rgba<u8>, Vec<u8>> {
-        image::ImageBuffer::from_fn(self.width, self.height, |x, y| {
-            image::Rgba(self.get_pixel(x, y))
+        image::ImageBuffer::from_fn(self.width - 1, self.height - 1, |x, y| {
+            image::Rgba(*self.get_pixel_unchecked(x, y))
         })
     }
 }
