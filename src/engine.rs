@@ -10,6 +10,12 @@ use winit_input_helper::WinitInputHelper;
 
 pub type DrawFn = Box<dyn Fn(&mut PixelWindow)>;
 
+enum BuilderOutput {
+    Stateless,
+    Statefull,
+    StatefullUpdate,
+}
+
 pub struct EngineBuilder<S>
 where
     S: Sized,
@@ -23,7 +29,7 @@ where
 
 impl<S> EngineBuilder<S>
 where
-    S: Sized,
+    S: Sized + 'static,
 {
     pub fn new() -> Self {
         Self {
@@ -43,14 +49,74 @@ where
         self.height = height;
         self
     }
+    pub fn with_state(mut self, state: S) -> Self {
+        self.state = Some(state);
+        self
+    }
+    pub fn with_draw_fn(mut self, draw_fn: impl Fn(&mut PixelWindow) + 'static) -> Self {
+        self.draw_fn = Box::new(draw_fn);
+        self
+    }
 
-    pub fn build(self) -> PixenEngine {
-        PixenEngine { title: self.title }
+    fn output_type(&self) -> BuilderOutput {
+        todo!()
+    }
+
+    pub fn build(self) -> Box<dyn PixenEngine> {
+        match self.output_type() {
+            BuilderOutput::Stateless => Box::new(StatelessEngine {
+                title: self.title,
+                width: self.width,
+                height: self.height,
+                draw_fn: self.draw_fn,
+            }),
+            BuilderOutput::Statefull => Box::new(StatefullEngine {
+                title: self.title,
+                width: self.width,
+                height: self.height,
+                state: self.state.unwrap(),
+                draw_fn: self.draw_fn,
+            }),
+            _ => unreachable!(),
+        }
     }
 }
 
-pub struct PixenEngine {
+pub trait PixenEngine {
+    fn run(&mut self);
+}
+
+pub struct StatelessEngine {
     title: String,
+    width: u32,
+    height: u32,
+    draw_fn: DrawFn,
+}
+
+impl PixenEngine for StatelessEngine {
+    fn run(&mut self) {
+        todo!()
+    }
+}
+
+pub struct StatefullEngine<S>
+where
+    S: Sized,
+{
+    title: String,
+    width: u32,
+    height: u32,
+    state: S,
+    draw_fn: DrawFn,
+}
+
+impl<S> PixenEngine for StatefullEngine<S>
+where
+    S: Sized,
+{
+    fn run(&mut self) {
+        todo!()
+    }
 }
 
 /// Run a stateless pixel engine. This engine only needs width, height and
