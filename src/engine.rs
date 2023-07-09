@@ -21,7 +21,7 @@ fn default_draw(window: &mut PixelWindow) {}
 pub struct EngineBuilder<D, S>
 where
     S: Sized,
-    D: Fn(&mut PixelWindow) + 'static,
+    D: Fn(&mut PixelWindow) + 'static + Clone,
 {
     title: String,
     width: u32,
@@ -33,7 +33,7 @@ where
 impl<D, S> EngineBuilder<D, S>
 where
     S: Sized + 'static,
-    D: Fn(&mut PixelWindow) + 'static,
+    D: Fn(&mut PixelWindow) + 'static + Clone,
 {
     pub fn new(draw_fn: D) -> Self {
         Self {
@@ -87,12 +87,12 @@ where
 }
 
 pub trait PixenEngine {
-    fn run(self);
+    fn run(&mut self);
 }
 
 pub struct StatelessEngine<D>
 where
-    D: Fn(&mut PixelWindow) + 'static,
+    D: Fn(&mut PixelWindow) + 'static + Clone,
 {
     title: String,
     width: u32,
@@ -102,17 +102,17 @@ where
 
 impl<D> PixenEngine for StatelessEngine<D>
 where
-    D: Fn(&mut PixelWindow) + 'static,
+    D: Fn(&mut PixelWindow) + 'static + Clone,
 {
-    fn run(self) {
-        run_stateless(self.width, self.height, self.draw_fn);
+    fn run(&mut self) {
+        run_stateless(self.width, self.height, self.draw_fn.clone());
     }
 }
 
 pub struct StatefullEngine<D, S>
 where
     S: Sized,
-    D: Fn(&mut PixelWindow) + 'static,
+    D: Fn(&mut PixelWindow) + 'static + Clone,
 {
     title: String,
     width: u32,
@@ -124,9 +124,9 @@ where
 impl<D, S> PixenEngine for StatefullEngine<D, S>
 where
     S: Sized,
-    D: Fn(&mut PixelWindow) + 'static,
+    D: Fn(&mut PixelWindow) + 'static + Clone,
 {
-    fn run(self) {
+    fn run(&mut self) {
         todo!()
     }
 }

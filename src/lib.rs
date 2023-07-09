@@ -6,7 +6,7 @@
 mod engine;
 
 #[cfg(feature = "window")]
-pub use engine::{run_statefull, run_stateless};
+pub use engine::{run_statefull, run_stateless, EngineBuilder, PixenEngine};
 
 mod pixel;
 
