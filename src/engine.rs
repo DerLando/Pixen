@@ -8,6 +8,51 @@ use winit::event_loop::{ControlFlow, EventLoop};
 use winit::window::WindowBuilder;
 use winit_input_helper::WinitInputHelper;
 
+pub type DrawFn = Box<dyn Fn(&mut PixelWindow)>;
+
+pub struct EngineBuilder<S>
+where
+    S: Sized,
+{
+    title: String,
+    width: u32,
+    height: u32,
+    state: Option<S>,
+    draw_fn: DrawFn,
+}
+
+impl<S> EngineBuilder<S>
+where
+    S: Sized,
+{
+    pub fn new() -> Self {
+        Self {
+            title: "Pixen".to_string(),
+            width: 160,
+            height: 144,
+            state: None,
+            draw_fn: Box::new(|_| ()),
+        }
+    }
+
+    pub fn with_width(mut self, width: u32) -> Self {
+        self.width = width;
+        self
+    }
+    pub fn with_height(mut self, height: u32) -> Self {
+        self.height = height;
+        self
+    }
+
+    pub fn build(self) -> PixenEngine {
+        PixenEngine { title: self.title }
+    }
+}
+
+pub struct PixenEngine {
+    title: String,
+}
+
 /// Run a stateless pixel engine. This engine only needs width, height and
 /// a draw function that will be called everytime the window refreshes.
 pub fn run_stateless<D: Fn(&mut PixelWindow) + 'static>(
