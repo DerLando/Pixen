@@ -8,15 +8,11 @@ use winit::event_loop::{ControlFlow, EventLoop};
 use winit::window::WindowBuilder;
 use winit_input_helper::WinitInputHelper;
 
-pub type DrawFn = Box<dyn Fn(&mut PixelWindow)>;
-
 enum BuilderOutput {
     Stateless,
     Statefull,
     StatefullUpdate,
 }
-
-fn default_draw(window: &mut PixelWindow) {}
 
 pub struct EngineBuilder<D, S>
 where
@@ -45,6 +41,10 @@ where
         }
     }
 
+    pub fn with_title(mut self, title: impl AsRef<str>) -> Self {
+        self.title = title.as_ref().to_owned();
+        self
+    }
     pub fn with_width(mut self, width: u32) -> Self {
         self.width = width;
         self
