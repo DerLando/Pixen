@@ -16,28 +16,32 @@ enum BuilderOutput {
     StatefullUpdate,
 }
 
-pub struct EngineBuilder<S>
+fn default_draw(window: &mut PixelWindow) {}
+
+pub struct EngineBuilder<D, S>
 where
     S: Sized,
+    D: Fn(&mut PixelWindow) + 'static,
 {
     title: String,
     width: u32,
     height: u32,
     state: Option<S>,
-    draw_fn: DrawFn,
+    draw_fn: D,
 }
 
-impl<S> EngineBuilder<S>
+impl<D, S> EngineBuilder<D, S>
 where
     S: Sized + 'static,
+    D: Fn(&mut PixelWindow) + 'static,
 {
-    pub fn new() -> Self {
+    pub fn new(draw_fn: D) -> Self {
         Self {
             title: "Pixen".to_string(),
             width: 160,
             height: 144,
             state: None,
-            draw_fn: Box::new(|_| ()),
+            draw_fn,
         }
     }
 
@@ -53,13 +57,13 @@ where
         self.state = Some(state);
         self
     }
-    pub fn with_draw_fn(mut self, draw_fn: impl Fn(&mut PixelWindow) + 'static) -> Self {
-        self.draw_fn = Box::new(draw_fn);
-        self
-    }
-
     fn output_type(&self) -> BuilderOutput {
-        todo!()
+        if self.state.is_some() {
+            // TODO: Check for update fn
+            BuilderOutput::Statefull
+        } else {
+            BuilderOutput::Stateless
+        }
     }
 
     pub fn build(self) -> Box<dyn PixenEngine> {
@@ -83,38 +87,46 @@ where
 }
 
 pub trait PixenEngine {
-    fn run(&mut self);
+    fn run(self);
 }
 
-pub struct StatelessEngine {
+pub struct StatelessEngine<D>
+where
+    D: Fn(&mut PixelWindow) + 'static,
+{
     title: String,
     width: u32,
     height: u32,
-    draw_fn: DrawFn,
+    draw_fn: D,
 }
 
-impl PixenEngine for StatelessEngine {
-    fn run(&mut self) {
-        todo!()
+impl<D> PixenEngine for StatelessEngine<D>
+where
+    D: Fn(&mut PixelWindow) + 'static,
+{
+    fn run(self) {
+        run_stateless(self.width, self.height, self.draw_fn);
     }
 }
 
-pub struct StatefullEngine<S>
+pub struct StatefullEngine<D, S>
 where
     S: Sized,
+    D: Fn(&mut PixelWindow) + 'static,
 {
     title: String,
     width: u32,
     height: u32,
     state: S,
-    draw_fn: DrawFn,
+    draw_fn: D,
 }
 
-impl<S> PixenEngine for StatefullEngine<S>
+impl<D, S> PixenEngine for StatefullEngine<D, S>
 where
     S: Sized,
+    D: Fn(&mut PixelWindow) + 'static,
 {
-    fn run(&mut self) {
+    fn run(self) {
         todo!()
     }
 }
